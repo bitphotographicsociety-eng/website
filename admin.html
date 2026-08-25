@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — PSOC Archive</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="admin-shell">
+
+<!-- ================= LOGIN ================= -->
+<div id="admin-login">
+  <div class="container login-wrap">
+    <span class="eyebrow" style="justify-content:center;">Restricted area</span>
+    <h1 style="margin-top:16px; font-size:32px;">Admin sign-in</h1>
+    <p style="color:var(--silver); margin-top:10px; font-size:14px;">Only society administrators can create or edit albums. Everyone else browses freely at <a href="albums.html" style="text-decoration:underline;">the public archive</a>.</p>
+    <div class="panel">
+      <form id="login-form">
+        <div class="field">
+          <label for="login-email">Email</label>
+          <input id="login-email" type="email" placeholder="you@institute.edu" required>
+        </div>
+        <div class="field">
+          <label for="login-pass">Password</label>
+          <input id="login-pass" type="password" placeholder="••••••••" required>
+        </div>
+        <button class="btn btn-primary" style="width:100%; justify-content:center;" type="submit">Sign in</button>
+      </form>
+      <div class="badge-note">Demo build: any email/password signs in. Production wires this to real authentication (SSO or a users table) with server-verified sessions.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= DASHBOARD ================= -->
+<div id="admin-dashboard" style="display:none;">
+  <div class="admin-topbar">
+    <a href="index.html" class="brand" style="font-size:16px;"><span class="mark" style="width:26px;height:26px;"></span> PSOC Admin</a>
+    <div style="display:flex; align-items:center; gap:20px;">
+      <a href="albums.html" style="font-family:var(--f-mono); font-size:12px; color:var(--silver);">View public archive →</a>
+      <button id="logout-btn" class="btn btn-ghost btn-sm">Sign out</button>
+    </div>
+  </div>
+
+  <div class="admin-body container">
+    <div class="admin-grid">
+      <!-- ---- form ---- -->
+      <div class="panel">
+        <h3 id="panel-title">New event</h3>
+        <p class="hint">Metadata + a Drive link only. Photo uploads, deletion and organisation happen inside Google Drive itself.</p>
+        <form id="event-form">
+          <div class="field">
+            <label for="f-title">Event name</label>
+            <input id="f-title" type="text" placeholder="e.g. Independence Day" required>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="f-date">Date</label>
+              <input id="f-date" type="date" required>
+            </div>
+            <div class="field">
+              <label for="f-category">Category</label>
+              <select id="f-category"></select>
+            </div>
+          </div>
+          <div class="field">
+            <label for="f-description">Short description</label>
+            <textarea id="f-description" placeholder="One or two sentences for the album card."></textarea>
+          </div>
+          <div class="field">
+            <label for="f-cover">Cover photograph URL</label>
+            <input id="f-cover" type="url" placeholder="https://…  (a single representative image)">
+          </div>
+          <div class="field">
+            <label for="f-drive">Google Drive album URL</label>
+            <input id="f-drive" type="url" placeholder="https://drive.google.com/drive/folders/…" required>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="f-photographer">Photographer / credits</label>
+              <input id="f-photographer" type="text" placeholder="Optional">
+            </div>
+            <div class="field">
+              <label for="f-count">Photo count</label>
+              <input id="f-count" type="number" min="0" placeholder="Optional">
+            </div>
+          </div>
+          <div class="field toggle-row">
+            <label style="margin:0;">Published</label>
+            <label class="switch">
+              <input id="f-published" type="checkbox" checked>
+              <span class="track"></span>
+            </label>
+          </div>
+          <div style="display:flex; gap:12px; margin-top:22px;">
+            <button class="btn btn-primary" type="submit" style="flex:1; justify-content:center;">Save event</button>
+            <button class="btn btn-ghost" type="button" id="reset-form-btn">Clear</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- ---- table ---- -->
+      <div>
+        <h3 style="margin-bottom:18px;">All events</h3>
+        <div class="admin-table-wrap">
+          <table>
+            <thead>
+              <tr><th>Title</th><th>Category</th><th>Date</th><th>Year</th><th>Photos</th><th>Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="admin-table-body"></tbody>
+          </table>
+        </div>
+        <p style="font-family:var(--f-mono); font-size:11px; color:var(--silver-dim); margin-top:16px;">
+          Deleting an event removes it from the website only — its Google Drive folder and photographs are never touched.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script src="js/admin.js"></script>
+<script>psocAdminBoot();</script>
+</body>
+</html>

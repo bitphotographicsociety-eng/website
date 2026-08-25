@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Archive — PSOC | The Photographic Society</title>
+<meta name="description" content="Browse every PSOC album ever published, organised by year and category.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="psoc-header"></div>
+
+<section style="padding-bottom:0;">
+  <div class="container">
+    <span class="eyebrow">The full archive</span>
+    <h1 style="margin-top:16px; font-size:clamp(36px,5vw,58px); max-width:16ch;">Every album, every year.</h1>
+    <p style="margin-top:16px; color:var(--silver); max-width:56ch; font-size:16px;">
+      Photographs stay in Google Drive; this index just points you to the right folder. Nothing here expires when the semester does.
+    </p>
+  </div>
+
+  <div class="container">
+    <div class="archive-toolbar">
+      <div class="pill-group" id="category-filters"></div>
+      <input type="search" id="search-input" class="search-input" placeholder="Search albums…">
+    </div>
+  </div>
+</section>
+
+<div id="year-sections" class="container"></div>
+
+<div id="empty-state" class="container" style="display:none; padding:60px 0 120px;">
+  <div class="empty-note">No albums match that search or filter yet.</div>
+</div>
+
+<div id="psoc-footer"></div>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script>
+  psocMountChrome("Archive");
+
+  let activeCategory = "All";
+  let query = "";
+
+  const categories = ["All", ...psocCategories()];
+  document.getElementById("category-filters").innerHTML = categories.map(c =>
+    `<button class="pill ${c==='All'?'active':''}" data-cat="${c}">${c}</button>`
+  ).join("");
+
+  function cardHtml(ev){
+    return `
+    <article class="album-card">
+      <a class="card-link" href="event.html?id=${ev.id}" aria-label="View ${ev.title} album"></a>
+      <div class="thumb">
+        <img src="${ev.cover_image}" alt="${ev.title}" loading="lazy">
+        <span class="count-badge">${ev.photo_count ? ev.photo_count + ' photos' : 'Coming soon'}</span>
+        <div class="info">
+          <div class="year-cat"><span>${psocFormatDate(ev.date)}</span><span>${ev.category}</span></div>
+          <h3>${ev.title}</h3>
+          <p class="desc">${ev.description}</p>
+          <span class="view-link">View Album ${ICONS.arrow}</span>
+        </div>
+      </div>
+    </article>`;
+  }
+
+  function render(){
+    const grouped = psocGetEventsByYear();
+    let anyVisible = false;
+    const html = grouped.map(g => {
+      const items = g.events.filter(ev => {
+        const matchesCat = activeCategory === "All" || ev.category === activeCategory;
+        const matchesQuery = !query || (ev.title + ev.description + ev.category).toLowerCase().includes(query);
+        return matchesCat && matchesQuery;
+      });
+      if(!items.length) return "";
+      anyVisible = true;
+      return `
+        <div class="year-block" id="year-${g.year}">
+          <div class="year-heading">
+            <span class="num">${g.year}</span>
+            <span class="meta">${items.length} album${items.length===1?'':'s'} archived</span>
+          </div>
+          <div class="album-grid compact">${items.map(cardHtml).join("")}</div>
+        </div>`;
+    }).join("");
+
+    document.getElementById("year-sections").innerHTML = html;
+    document.getElementById("empty-state").style.display = anyVisible ? "none" : "block";
+  }
+
+  document.getElementById("category-filters").addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-cat]");
+    if(!btn) return;
+    activeCategory = btn.dataset.cat;
+    document.querySelectorAll("#category-filters .pill").forEach(p => p.classList.toggle("active", p === btn));
+    render();
+  });
+
+  document.getElementById("search-input").addEventListener("input", (e) => {
+    query = e.target.value.trim().toLowerCase();
+    render();
+  });
+
+  render();
+
+  // deep-link to a year anchor, e.g. albums.html#year-2025
+  if(location.hash){
+    setTimeout(() => document.querySelector(location.hash)?.scrollIntoView({behavior:"smooth"}), 200);
+  }
+</script>
+</body>
+</html>

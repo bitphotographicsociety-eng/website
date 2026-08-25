@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="page-title">Album — PSOC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="psoc-header"></div>
+
+<div id="event-not-found" class="container" style="display:none; padding:120px 0; text-align:center;">
+  <h1 style="font-size:32px;">Album not found</h1>
+  <p style="color:var(--silver); margin-top:12px;">This album may have been unpublished or removed.</p>
+  <a href="albums.html" class="btn btn-ghost" style="margin-top:24px;">← Back to the archive</a>
+</div>
+
+<div id="event-content" style="display:none;">
+  <!-- ================= EVENT HERO ================= -->
+  <section class="event-hero">
+    <img id="hero-img" src="" alt="">
+    <div class="event-hero-content">
+      <div class="event-hero-inner">
+        <a href="albums.html" style="font-family:var(--f-mono); font-size:12px; color:var(--silver); display:inline-flex; align-items:center; gap:8px; margin-bottom:20px;">← Back to archive</a>
+        <div class="event-meta-row">
+          <span id="hero-year"></span>
+          <span class="dim" id="hero-date"></span>
+          <span class="dim" id="hero-category"></span>
+        </div>
+        <h1 id="hero-title"></h1>
+        <p class="desc" id="hero-desc"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= GALLERY TOOLBAR ================= -->
+  <div class="gallery-toolbar">
+    <div class="container row">
+      <span class="select-status" id="select-status"></span>
+      <div class="toolbar-spacer"></div>
+      <span class="source-note" id="drive-note-wrap"><span id="drive-note"></span></span>
+      <button class="checkbox-btn" id="btn-select-all">Select all</button>
+      <button class="btn btn-ghost btn-sm" id="btn-download-selected" disabled>Download selected</button>
+      <button class="btn btn-brass btn-sm" id="btn-download-all">Download all photos</button>
+    </div>
+  </div>
+
+  <!-- ================= PHOTO GRID ================= -->
+  <div class="container">
+    <div class="photo-grid" id="photo-grid"></div>
+  </div>
+
+  <div class="container">
+    <div style="padding:56px 0 100px; text-align:center;">
+      <p style="font-family:var(--f-mono); font-size:12px; color:var(--silver-dim);">
+        Photographs are streamed directly from Google Drive. Prefer Drive's own interface?
+      </p>
+      <a id="open-drive-link" href="#" target="_blank" rel="noopener" class="btn btn-ghost btn-sm" style="margin-top:14px;">
+        Open this album in Google Drive →
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ================= LIGHTBOX VIEWER ================= -->
+<div class="viewer" id="viewer">
+  <div class="viewer-top">
+    <span class="viewer-counter" id="viewer-counter">001 / 001</span>
+    <button class="viewer-close" id="viewer-close" aria-label="Close viewer">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+  <div class="viewer-stage">
+    <button class="viewer-nav prev" id="viewer-prev" aria-label="Previous photo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 6l-6 6 6 6"/></svg>
+    </button>
+    <img id="viewer-img" src="" alt="Photograph">
+    <button class="viewer-nav next" id="viewer-next" aria-label="Next photo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 6l6 6-6 6"/></svg>
+    </button>
+  </div>
+  <div class="viewer-bottom">
+    <div>
+      <div style="display:flex; align-items:center; gap:16px; justify-content:center;">
+        <button class="btn btn-ghost btn-sm" id="viewer-prev-btn" onclick="document.getElementById('viewer-prev').click()">← Previous</button>
+        <button class="btn btn-primary btn-sm" id="viewer-download">Download</button>
+        <button class="btn btn-ghost btn-sm" onclick="document.getElementById('viewer-next').click()">Next →</button>
+      </div>
+      <div class="meta" id="viewer-name"></div>
+      <div class="meta" id="viewer-meta"></div>
+    </div>
+  </div>
+</div>
+
+<div id="psoc-footer"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script src="js/drive-api.js"></script>
+<script src="js/gallery.js"></script>
+<script>
+  psocMountChrome("Archive");
+
+  const params = new URLSearchParams(location.search);
+  const ev = psocGetEventById(params.get("id"));
+
+  if(!ev || !ev.published){
+    document.getElementById("event-not-found").style.display = "block";
+  } else {
+    document.getElementById("event-content").style.display = "block";
+    document.getElementById("page-title").textContent = `${ev.title} — PSOC Archive`;
+    document.getElementById("hero-img").src = ev.cover_image;
+    document.getElementById("hero-img").alt = ev.title;
+    document.getElementById("hero-year").textContent = ev.year;
+    document.getElementById("hero-date").textContent = psocFormatDate(ev.date);
+    document.getElementById("hero-category").textContent = ev.category;
+    document.getElementById("hero-title").textContent = ev.title;
+    document.getElementById("hero-desc").textContent = ev.description + (ev.photographer ? ` — Shot by ${ev.photographer}.` : "");
+    document.getElementById("open-drive-link").href = ev.google_drive_url;
+    document.getElementById("drive-note-wrap").innerHTML = ICONS.drive + `<span>Backed by Google Drive</span>`;
+
+    PsocGallery.init(ev);
+  }
+</script>
+</body>
+</html>

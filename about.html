@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — PSOC | The Photographic Society</title>
+<meta name="description" content="PSOC is the institute's student-run photographic society, documenting campus life since 2009 and archiving every album permanently.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="psoc-header"></div>
+
+<!-- ================= PAGE HERO ================= -->
+<section class="hero-sub">
+  <div class="container">
+    <span class="eyebrow">Est. 2009</span>
+    <h1 style="margin-top:16px; font-size:clamp(38px,5.5vw,64px); max-width:18ch;">The society behind the archive.</h1>
+    <p style="margin-top:18px; color:var(--silver); max-width:58ch; font-size:16px;">
+      PSOC is the institute's student-run photography society. This page is the short version of who we are — the full record of what we've shot lives in <a href="albums.html" style="text-decoration:underline;">the archive</a>.
+    </p>
+  </div>
+</section>
+
+<!-- ================= STORY ================= -->
+<section id="about" class="on-paper">
+  <div class="container about-grid">
+    <div class="about-photo">
+      <img src="https://images.unsplash.com/photo-1520390138845-fd2d229dd553?q=80&w=1200&auto=format&fit=crop" alt="PSOC members shooting on campus">
+    </div>
+    <div class="about-copy">
+      <span class="eyebrow">Our story</span>
+      <h2 style="margin-top:14px; font-size:clamp(28px,4vw,42px);">We document the institute, on purpose.</h2>
+      <p>Every fest, match, workshop and ordinary Tuesday on campus gets covered by our members, and every album we shoot becomes a permanent part of this archive — not a highlight reel that disappears after the semester ends.</p>
+      <p>Members handle their own equipment and editing; the society's job is to make sure the results stay findable for as long as the institute exists. No album is ever taken down once it's published — that's the whole point of the archive.</p>
+      <div class="stat-row">
+        <div class="stat"><b id="stat-events">—</b><span>Albums archived</span></div>
+        <div class="stat"><b id="stat-years">—</b><span>Years covered</span></div>
+        <div class="stat"><b>Free</b><span>Access for all alumni</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WHAT WE DO ================= -->
+<section>
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">How the society runs</span>
+        <h2>Three jobs, one archive.</h2>
+        <p>Everything PSOC does folds back into the same permanent index.</p>
+      </div>
+    </div>
+    <div class="value-grid">
+      <div class="value-card">
+        <span class="num">01</span>
+        <h3>Cover</h3>
+        <p>Members shoot every fest, match, workshop and ceremony on campus, on their own gear, in their own editing style.</p>
+      </div>
+      <div class="value-card">
+        <span class="num">02</span>
+        <h3>Catalogue</h3>
+        <p>Each shoot becomes an event entry — title, date, category, credits — and its full-resolution folder is filed in Drive.</p>
+      </div>
+      <div class="value-card">
+        <span class="num">03</span>
+        <h3>Keep</h3>
+        <p>Published albums stay online indefinitely. Nothing gets deleted at the end of a semester or when a batch graduates.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TIMELINE ================= -->
+<section class="on-paper" style="padding-top:100px;">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <span class="eyebrow">Since 2009</span>
+        <h2>A short timeline.</h2>
+      </div>
+    </div>
+    <div class="timeline">
+      <div class="timeline-row">
+        <div class="yr">2009</div>
+        <div><h4>PSOC is founded</h4><p>Started as a small group of students documenting campus events on borrowed cameras.</p></div>
+      </div>
+      <div class="timeline-row">
+        <div class="yr">2024</div>
+        <div><h4>First fully-digital archive entry</h4><p>The earliest fully catalogued album — Freshers' Night 2024 — enters the permanent index.</p></div>
+      </div>
+      <div class="timeline-row">
+        <div class="yr">Today</div>
+        <div><h4>Digital archive, year-indexed</h4><p>Every album since is filed the same way — metadata on the website, photographs in Google Drive — so the collection can keep growing without a redesign.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOLLOW ================= -->
+<section class="follow-band">
+  <div class="container">
+    <span class="eyebrow" style="justify-content:center;">Between albums</span>
+    <h2 style="margin-top:14px;">Follow the society</h2>
+    <p>Behind-the-scenes shots, open-call announcements and event coverage as it happens.</p>
+    <div class="follow-icons">
+      <a href="" id="follow-instagram" target="_blank" rel="noopener">Instagram</a>
+      <a href="" id="follow-linkedin" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+  </div>
+</section>
+
+<div id="psoc-footer"></div>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script>
+  psocMountChrome("About");
+
+  const grouped = psocGetEventsByYear();
+  document.getElementById("stat-events").textContent = psocGetPublishedEvents().length;
+  document.getElementById("stat-years").textContent = grouped.length;
+  document.getElementById("follow-instagram").href = PSOC_SOCIAL.instagram;
+  document.getElementById("follow-instagram").innerHTML = ICONS.instagram + "Instagram";
+  document.getElementById("follow-linkedin").href = PSOC_SOCIAL.linkedin;
+  document.getElementById("follow-linkedin").innerHTML = ICONS.linkedin + "LinkedIn";
+</script>
+</body>
+</html>
