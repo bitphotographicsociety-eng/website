@@ -80,6 +80,14 @@ async function requestDriveApi(query: string, fields: string): Promise<any[]> {
     throw new Error("Google Drive API configuration is missing in .env");
   }
 
+  // Defensive: never allow 'null', 'undefined', or '' in parents to reach the API
+  if (query.includes("'null'") || query.includes("'undefined'") || query.includes("''")) {
+    throw new Error(
+      "Google Drive parent folder ID is missing or invalid. " +
+      "Check VITE_GOOGLE_DRIVE_FOLDER_ID in your .env file."
+    );
+  }
+
   return runWithConcurrencyLimit(async () => {
     const allFiles: any[] = [];
     let pageToken = "";

@@ -109,6 +109,15 @@ export default function SubAlbumPage() {
           <p style={{ marginTop: "18px", color: "var(--silver)", fontSize: "16px" }}>
             {currentFolder.photoCount} photograph{currentFolder.photoCount === 1 ? "" : "s"}
           </p>
+          <a
+            href={currentFolder.driveUrl}
+            target="_blank"
+            rel="noopener"
+            className="btn btn-ghost btn-sm"
+            style={{ marginTop: "20px" }}
+          >
+            Open this album in Google Drive →
+          </a>
         </div>
       </section>
 

@@ -107,6 +107,15 @@ export default function EventPage() {
             <p className="desc" style={{ fontFamily: "var(--f-mono)", fontSize: "12px", color: "var(--silver-dim)", marginTop: "12px" }}>
               {event.driveFolderName}
             </p>
+            <a
+              href={event.driveUrl}
+              target="_blank"
+              rel="noopener"
+              className="btn btn-ghost btn-sm"
+              style={{ marginTop: "20px" }}
+            >
+              Open this album in Google Drive →
+            </a>
           </div>
         </div>
       </section>
